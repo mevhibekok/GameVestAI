@@ -1,0 +1,38 @@
+{
+    "investment_threshold": 0.6,
+    "positive_class": "good_investment",
+    "features": [
+        "platform",
+        "year",
+        "genre",
+        "publisher_grouped"
+    ],
+    "cat_features": [
+        "platform",
+        "genre",
+        "publisher_grouped"
+    ],
+    "rec_features": [
+        "platform",
+        "genre",
+        "publisher_grouped",
+        "year"
+    ],
+    "top_publishers": [
+        "Electronic Arts",
+        "Activision",
+        "Ubisoft",
+        "Namco Bandai Games",
+        "THQ",
+        "Sony Computer Entertainment",
+        "Sega",
+        "Nintendo",
+        "Konami Digital Entertainment",
+        "Capcom",
+        "Atari",
+        "Take-Two Interactive",
+        "Tecmo Koei",
+        "Konami",
+        "Square Enix"
+    ]
+}
