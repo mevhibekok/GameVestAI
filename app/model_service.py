@@ -9,8 +9,13 @@ from catboost import CatBoostClassifier
 BASE_DIR = Path(__file__).resolve().parent.parent
 MODEL_DIR = BASE_DIR / "models"
 
+# Load model metadata (model configuration)
 with open(MODEL_DIR / "model_metadata.json", "r", encoding="utf-8") as f:
     metadata = json.load(f)
+
+# Load dataset options (for validation and fallback)
+with open(MODEL_DIR / "dataset_options.json", "r", encoding="utf-8") as f:
+    dataset_options = json.load(f)
 
 investment_model = CatBoostClassifier()
 investment_model.load_model(str(MODEL_DIR / "catboost_investment_model.cbm"))
@@ -21,6 +26,7 @@ recommend_df = joblib.load(MODEL_DIR / "recommend_df.joblib")
 
 
 def normalize_publisher(publisher: str) -> str:
+    """Normalize publisher to known publishers or 'Other'"""
     top_publishers = metadata["top_publishers"]
 
     if publisher in top_publishers:
@@ -29,13 +35,60 @@ def normalize_publisher(publisher: str) -> str:
     return "Other"
 
 
+def normalize_genre(genre: str) -> str:
+    """Normalize genre to known genres or default"""
+    valid_genres = dataset_options.get("genres", [])
+    
+    if genre in valid_genres:
+        return genre
+    
+    # Fallback: return first valid genre or 'Misc' if available
+    if valid_genres:
+        return "Misc" if "Misc" in valid_genres else valid_genres[0]
+    return genre
+
+
+def normalize_platform(platform: str) -> str:
+    """Normalize platform to known platforms or default"""
+    valid_platforms = dataset_options.get("platforms", [])
+    
+    if platform in valid_platforms:
+        return platform
+    
+    # Fallback: return first valid platform if available
+    if valid_platforms:
+        return valid_platforms[0]
+    return platform
+
+
+def normalize_year(year: int) -> int:
+    """Ensure year is within valid range"""
+    valid_years = dataset_options.get("years", [])
+    
+    if not valid_years:
+        return year
+    
+    min_year = min(valid_years)
+    max_year = max(valid_years)
+    
+    # Clamp year to valid range
+    return max(min_year, min(year, max_year))
+
+
 def predict_investment(platform: str, genre: str, publisher: str, year: int):
-    publisher_grouped = normalize_publisher(publisher)
+    """Predict investment opportunity with automatic normalization and fallback"""
+    
+    # Normalize inputs to safe values
+    platform_normalized = normalize_platform(platform)
+    genre_normalized = normalize_genre(genre)
+    publisher_normalized = normalize_publisher(publisher)
+    year_normalized = normalize_year(year)
+    publisher_grouped = publisher_normalized
 
     input_df = pd.DataFrame([{
-        "platform": platform,
-        "year": int(year),
-        "genre": genre,
+        "platform": platform_normalized,
+        "year": int(year_normalized),
+        "genre": genre_normalized,
         "publisher_grouped": publisher_grouped
     }])
 
@@ -58,11 +111,11 @@ def predict_investment(platform: str, genre: str, publisher: str, year: int):
         recommendation_level = "not_recommended"
 
     return {
-        "platform": platform,
-        "genre": genre,
-        "publisher": publisher,
+        "platform": platform_normalized,
+        "genre": genre_normalized,
+        "publisher": publisher_normalized,
         "publisher_grouped": publisher_grouped,
-        "year": int(year),
+        "year": int(year_normalized),
         "good_investment_probability": round(good_probability, 4),
         "threshold": threshold,
         "prediction": prediction,
@@ -71,13 +124,20 @@ def predict_investment(platform: str, genre: str, publisher: str, year: int):
 
 
 def recommend_games(platform: str, genre: str, publisher: str, year: int, top_n: int = 5):
-    publisher_grouped = normalize_publisher(publisher)
+    """Recommend similar games with automatic normalization and fallback"""
+    
+    # Normalize inputs to safe values
+    platform_normalized = normalize_platform(platform)
+    genre_normalized = normalize_genre(genre)
+    publisher_normalized = normalize_publisher(publisher)
+    year_normalized = normalize_year(year)
+    publisher_grouped = publisher_normalized
 
     input_df = pd.DataFrame([{
-        "platform": platform,
-        "genre": genre,
+        "platform": platform_normalized,
+        "genre": genre_normalized,
         "publisher_grouped": publisher_grouped,
-        "year": int(year)
+        "year": int(year_normalized)
     }])
 
     input_processed = preprocessor.transform(input_df)
@@ -108,10 +168,10 @@ def recommend_games(platform: str, genre: str, publisher: str, year: int, top_n:
     def generate_reason(row):
         reasons = []
 
-        if row["genre"] == genre:
+        if row["genre"] == genre_normalized:
             reasons.append("Same genre")
 
-        if row["platform"] == platform:
+        if row["platform"] == platform_normalized:
             reasons.append("Same platform")
 
         if row["publisher_grouped"] == publisher_grouped:
