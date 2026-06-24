@@ -7,14 +7,6 @@ export default function SearchPage() {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  const trendingSearches = [
-    { icon: 'trending_up', label: 'GTA VI' },
-    { icon: 'data_usage', label: 'Cyberpunk 2077' },
-    { icon: 'monitoring', label: 'Elden Ring' },
-    { icon: 'category', label: 'Action RPG' },
-    { icon: 'sports_esports', label: 'Nintendo Switch' }
-  ];
-
   const handleSearch = async (query) => {
     if (!query.trim()) {
       setError('Please enter a game name');
@@ -122,22 +114,6 @@ export default function SearchPage() {
         )}
       </div>
 
-      {/* Trending Searches */}
-      <div className="w-full max-w-md">
-        <h2 className="font-label-caps text-label-caps text-on-surface-variant mb-stack-sm ml-1">TRENDING</h2>
-        <div className="flex flex-wrap gap-2">
-          {trendingSearches.map((search) => (
-            <button
-              key={search.label}
-              onClick={() => handleSearch(search.label)}
-              disabled={loading}
-              className="px-4 py-2 bg-surface-container-low border border-outline-variant rounded-full font-body-sm text-body-sm text-on-surface hover:bg-surface-container-high hover:border-outline transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {search.label}
-            </button>
-          ))}
-        </div>
-      </div>
     </main>
   );
 }

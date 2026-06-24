@@ -21,28 +21,28 @@ export default function AnalysisResultsPage() {
 
     const recommendations = {
       'good_investment': {
-        text: 'Yatırım Yap',
+        text: 'Invest',
         color: 'bg-secondary/20 text-secondary border border-secondary/30',
         bgColor: 'secondary',
         colorHex: colorMap['good_investment'].hex,
         colorRgb: colorMap['good_investment'].rgb,
-        description: 'Model bu oyunu yatırım yapılabilir bir proje olarak değerlendiriyor.'
+        description: ''
       },
       'needs_review': {
-        text: 'İncelemeye Devam Et',
+        text: 'Review',
         color: 'bg-tertiary/20 text-tertiary border border-tertiary/30',
         bgColor: 'tertiary',
         colorHex: colorMap['needs_review'].hex,
         colorRgb: colorMap['needs_review'].rgb,
-        description: 'Model bu oyunu incelemeye devam etmeyi öneriyor. Ek araştırmaya ihtiyaç var.'
+        description: ''
       },
       'risky_investment': {
-        text: 'Riskli Yatırım',
+        text: 'Avoid',
         color: 'bg-error/20 text-error border border-error/30',
         bgColor: 'error',
         colorHex: colorMap['risky_investment'].hex,
         colorRgb: colorMap['risky_investment'].rgb,
-        description: 'Model bu oyunu risk taşıyan bir proje olarak değerlendiriyor.'
+        description: ''
       }
     };
     return recommendations[prediction] || recommendations['needs_review'];
@@ -135,9 +135,7 @@ export default function AnalysisResultsPage() {
               style={{ width: `${metrics.confidence}%`, backgroundColor: metrics.colorHex }}
             />
           </div>
-          <p className="text-body-xs font-body-xs text-on-surface-variant mt-2">
-            Model'in bu projeyi iyi yatırım olarak sınıflandırma olasılığı
-          </p>
+
         </div>
       </section>
 

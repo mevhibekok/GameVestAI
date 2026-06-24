@@ -17,9 +17,9 @@ export default function Header() {
 
   return (
     <header className="bg-surface dark:bg-surface border-b border-outline-variant dark:border-outline-variant w-full sticky top-0 z-50">
-      <div className="flex justify-between items-center w-full px-margin-desktop h-16 max-w-container-max mx-auto">
+      <div className="relative flex items-center justify-center w-full px-margin-desktop h-16 max-w-container-max mx-auto">
         {/* Brand */}
-        <div className="flex items-center gap-stack-md">
+        <div className="absolute left-margin-desktop flex items-center gap-stack-md">
           <span className="font-headline-md text-headline-md font-bold text-on-surface dark:text-on-surface tracking-tight">
             GameVestAI
           </span>
@@ -37,16 +37,6 @@ export default function Header() {
             Analyze
           </Link>
         </nav>
-
-        {/* Trailing Actions */}
-        <div className="flex items-center gap-stack-md">
-          <button className="text-on-surface-variant hover:text-primary transition-colors flex items-center justify-center h-10 w-10 rounded-full hover:bg-surface-container">
-            <span className="material-symbols-outlined">notifications</span>
-          </button>
-          <button className="text-on-surface-variant hover:text-primary transition-colors flex items-center justify-center h-10 w-10 rounded-full hover:bg-surface-container">
-            <span className="material-symbols-outlined">settings</span>
-          </button>
-        </div>
       </div>
     </header>
   );
