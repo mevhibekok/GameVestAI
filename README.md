@@ -18,7 +18,6 @@ Projenin amacı; global oyun piyasasındaki tarihsel ve güncel verileri kullana
 
 - Oyun satış verilerinden **başarı tahmini** modelleri geliştirmek
 - Platform, tür ve bölge bazlı **pazar segmentasyonu** yapmak
-- Kullanıcı yorumları ve puanlamalardan **NLP ile duygu analizi** çıkarmak
 - Tüm bu analizleri interaktif bir **dashboard** arayüzünde sunmak
 
 ---
